@@ -8,7 +8,8 @@ import (
 func TestCounter(t *testing.T) {
 
 	t.Run("processing 3 times brings the counter to 3", func(t *testing.T) {
-		mw := &MeasuredWorker{}
+		// mw := &MeasuredWorker{Worker: &SlowWorker{}}
+		mw := &MeasuredWorker{} // removed reference to SlowWorker
 
 		mw.Work()
 		mw.Work()
@@ -19,13 +20,13 @@ func TestCounter(t *testing.T) {
 
 	t.Run("concurrent processing and counting", func(t *testing.T) {
 		wantedCount := 1000
-		mw := &MeasuredWorker{}
+		// mw := &MeasuredWorker{Worker: &SlowWorker{}}
+		mw := &MeasuredWorker{} // removed reference to SlowWorker
 
 		var wg sync.WaitGroup
-		
 
 		for i := 0; i < wantedCount; i++ {
-			wg.Add(1)
+			wg.Add(1) // increments the internal counter to start from the same value each time
 			mw.Work()
 			wg.Done()
 		}
